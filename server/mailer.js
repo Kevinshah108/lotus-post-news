@@ -3,13 +3,13 @@ const nodemailer = require('nodemailer');
 // 1. Configure Transport
 const transporter = nodemailer.createTransport({
   service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465, // Changed from 587
+  secure: true, // Changed from false
   auth: {
-    user: process.env.EMAIL_USER, // Your new dedicated Gmail
-    pass: process.env.EMAIL_PASS  // Your App Password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
-  tls: {
-    rejectUnauthorized: false
-  }
 });
 
 const SITE_URL = "http://localhost:3000"; 
