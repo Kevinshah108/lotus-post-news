@@ -24,7 +24,7 @@ export default function Footer() {
     setStatus("sending");
 
     try {
-      await axios.post('http://localhost:5000/api/subscribe', { email });
+      await axios.post('https://lotus-post-api.onrender.com/api/subscribe', { email });
       
       setStatus("success");
       alert("✅ Subscribed! Check your inbox for a welcome email.");

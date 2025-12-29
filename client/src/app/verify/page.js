@@ -10,7 +10,7 @@ export default function VerifyPage() {
 
   useEffect(() => {
     if (token) {
-      axios.post("http://localhost:5000/api/verify", { token })
+      axios.post("https://lotus-post-api.onrender.com/api/verify", { token })
         .then(() => setMessage("✅ Email Verified! You are now subscribed."))
         .catch(() => setMessage("❌ Invalid or expired token."));
     }

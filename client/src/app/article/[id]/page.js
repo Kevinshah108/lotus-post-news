@@ -17,7 +17,7 @@ export default function ArticlePage() {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/news/${id}`);
+        const res = await axios.get(`https://lotus-post-api.onrender.com/api/news/${id}`);
         setArticle(res.data);
       } catch (err) {
         console.error(err);

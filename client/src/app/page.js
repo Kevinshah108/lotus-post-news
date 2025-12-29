@@ -24,7 +24,7 @@ function NewsFeed() {
     const fetchNews = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`http://localhost:5000/api/news?category=${category}`);
+        const res = await axios.get(`https://lotus-post-api.onrender.com/api/news?category=${category}`);
         setNews(res.data);
       } catch (err) { console.error(err); } 
       finally { setLoading(false); }
