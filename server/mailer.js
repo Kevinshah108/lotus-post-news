@@ -1,29 +1,30 @@
 const nodemailer = require('nodemailer');
 
-// 1. Configure Transport
+// 1. Configure Transport (Good job on port 465!)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   host: 'smtp.gmail.com',
-  port: 465, // Changed from 587
-  secure: true, // Changed from false
+  port: 465, 
+  secure: true, 
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
 });
 
-const SITE_URL = "http://localhost:3000"; 
+// 🔴 FIX: Detect if we are Live or Local
+// You can set CLIENT_URL in Render, or just hardcode your Vercel link here for safety
+const SITE_URL = process.env.CLIENT_URL || "https://lotus-post-news.vercel.app"; 
 
-// 🟢 KEY CHANGE: We define a variable for the "From" format
-// This format: '"Name Here" <email@address.com>' ensures the Name is what shows up.
+// Identity
 const SENDER_IDENTITY = `"Lotus Post Team" <${process.env.EMAIL_USER}>`;
 
 // 2. Send Verification Email
 const sendVerificationEmail = async (email, token) => {
-  const link = `${SITE_URL}/verify?token=${token}`;
+  const link = `${SITE_URL}/verify?token=${token}`; // Now points to Vercel
   
   const mailOptions = {
-    from: SENDER_IDENTITY, // <--- Using the professional name
+    from: SENDER_IDENTITY,
     to: email,
     subject: 'Action Required: Verify your subscription',
     html: `
@@ -44,10 +45,13 @@ const sendVerificationEmail = async (email, token) => {
 
 // 3. Send News Alert
 const sendNewsAlert = async (email, article) => {
-  const unsubscribeLink = `${SITE_URL}/unsubscribe?email=${email}`; // We will build this page next
-  
+  const unsubscribeLink = `${SITE_URL}/unsubscribe?email=${email}`;
+  // NOTE: Your article._id link assumes you have a page for individual articles.
+  // If not, maybe point to the homepage for now: `${SITE_URL}`
+  const articleLink = `${SITE_URL}/article/${article._id}`; 
+
   const mailOptions = {
-    from: SENDER_IDENTITY, // <--- Using the professional name
+    from: SENDER_IDENTITY, 
     to: email,
     subject: `📰 ${article.title}`,
     html: `
@@ -56,7 +60,7 @@ const sendNewsAlert = async (email, article) => {
         <p style="font-size: 16px; line-height: 1.5;">${article.description}</p>
         
         <div style="margin-top: 20px;">
-          <a href="http://localhost:3000/article/${article._id}" style="color: #2563EB; font-weight:bold; text-decoration: none;">Read full story →</a>
+          <a href="${articleLink}" style="color: #2563EB; font-weight:bold; text-decoration: none;">Read full story →</a>
         </div>
         
         <hr style="margin-top: 40px; border:0; border-top:1px solid #eee;" />
@@ -72,8 +76,9 @@ const sendNewsAlert = async (email, article) => {
 
   try {
     await transporter.sendMail(mailOptions);
+    console.log(`📧 Email sent to ${email}`);
   } catch (err) {
-    console.error(`Failed to email ${email}`);
+    console.error(`❌ Failed to email ${email}:`, err.message);
   }
 };
 
