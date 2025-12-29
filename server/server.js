@@ -11,7 +11,7 @@ const crypto = require('crypto');
 
 
 const app = express();
-app.use(cors({ origin: "http://localhost:3000" })); 
+app.use(cors()); 
 app.use(express.json());
 
 // 1. Connect to Database
