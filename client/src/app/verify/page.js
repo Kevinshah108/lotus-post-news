@@ -1,9 +1,14 @@
 "use client";
+
+// 🔴 THIS LINE FIXES THE BUILD ERROR
+// It tells Next.js: "Skip this page during build, render it live on the server."
+export const dynamic = "force-dynamic";
+
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
 
-// 1. The Logic Component (Handles the token)
+// 1. The Logic Component
 function VerifyContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -11,7 +16,7 @@ function VerifyContent() {
 
   useEffect(() => {
     if (token) {
-      // Make sure this URL matches your Render Backend
+      // Ensure this URL is your RENDER Backend URL
       axios.post("https://lotus-post-api.onrender.com/api/verify", { token })
         .then(() => setMessage("✅ Email Verified! You are now subscribed."))
         .catch(() => setMessage("❌ Invalid or expired token."));
@@ -23,7 +28,7 @@ function VerifyContent() {
   return <h1 className="text-2xl font-bold">{message}</h1>;
 }
 
-// 2. The Main Page (Wraps logic in Suspense)
+// 2. The Main Page Wrapper
 export default function VerifyPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-black text-white">
